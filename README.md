@@ -3,11 +3,12 @@
 ## Project Objective
 Design and implement an end-to-end AWS CI/CD pipeline that automatically builds, tests, containerizes, and deploys a web application to EC2 using AWS CodePipeline, CodeBuild, CodeDeploy, and ECR.
 
-## Overview
-This project demonstrates the incremental design and implementation of a production-ready CI/CD pipeline on AWS for a containerized web application.  
-The focus is on automation, repeatability, and disciplined DevOps practices rather than application complexity or one-click deployments.
+---
 
-The pipeline is built phase by phase to clearly illustrate how each AWS service contributes to the overall delivery workflow.
+## Overview
+This project demonstrates the incremental design and implementation of a production-ready CI/CD pipeline on AWS for a containerized web application.
+
+The emphasis is on **DevOps fundamentals, automation discipline, and reproducibility**, following a phase-by-phase approach similar to real-world engineering workflows rather than one-click deployments.
 
 ---
 
@@ -17,8 +18,14 @@ GitHub → CodePipeline → CodeBuild → Amazon ECR → CodeDeploy → EC2
 ---
 
 ## Architecture
-Architecture diagrams are introduced starting from **Phase 1**, when the first functional component (a Dockerized application) is created.  
-Each subsequent phase adds a new layer to the pipeline and is documented with a corresponding architecture diagram.
+
+### Phase 1 — Dockerized Application (Local)
+![Phase 1 Architecture](architecture/phase-1-dockerized-app.png)
+
+In this phase, a minimal web application is developed and packaged into a Docker container.  
+The application is built and validated locally to ensure consistent runtime behavior before introducing any AWS CI/CD services.
+
+This phase establishes a stable, reproducible artifact that will later be integrated into Amazon ECR, CodeBuild, and CodeDeploy.
 
 ---
 
@@ -35,7 +42,7 @@ Each subsequent phase adds a new layer to the pipeline and is documented with a 
 
 ## Phase Breakdown
 - Phase 0: Project Planning & Repository Setup ✅
-- Phase 1: Application Development & Dockerization
+- Phase 1: Application Development & Dockerization ✅
 - Phase 2: Container Registry (Amazon ECR)
 - Phase 3: Build Automation (AWS CodeBuild)
 - Phase 4: Deployment Automation (AWS CodeDeploy)
@@ -44,5 +51,6 @@ Each subsequent phase adds a new layer to the pipeline and is documented with a 
 ---
 
 ## Status
-Phase 0 completed. Project is ready to proceed with application development and Dockerization.
+Phase 1 completed.  
+The application is successfully containerized, validated locally, and ready to be integrated with AWS CI/CD services in the next phase.
 
