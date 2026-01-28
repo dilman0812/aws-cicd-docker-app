@@ -22,28 +22,27 @@ GitHub → CodePipeline → CodeBuild → Amazon ECR → CodeDeploy → EC2
 ### Phase 1 — Dockerized Application (Local)
 ![Phase 1 Architecture](architecture/phase-1-dockerized-app.png)
 
-In this phase, a minimal web application is developed and packaged into a Docker container.  
+In this phase, a minimal web application is developed and packaged into a Docker container.
 The application is built and validated locally to ensure consistent runtime behavior before introducing any AWS CI/CD services.
-
-This phase establishes a stable, reproducible artifact that will later be integrated into Amazon ECR, CodeBuild, and CodeDeploy.
 
 ---
 
-## Technologies Used
-- AWS CodePipeline
-- AWS CodeBuild
-- AWS CodeDeploy
-- Amazon ECR
-- Amazon EC2
-- Docker
-- GitHub
+### Phase 2 — EC2 & Amazon ECR Integration
+![Phase 2 Architecture](architecture/phase-2-ecr.png)
+
+In this phase, AWS infrastructure required for container distribution is introduced.
+A Free Tier Amazon EC2 instance is provisioned and integrated with a private Amazon ECR repository using an IAM role.
+
+The Docker image built in Phase 1 is manually pushed from the local environment to ECR and then securely pulled onto the EC2 instance using IAM-based authentication, without relying on long-lived access keys.
+
+This phase validates the complete container image lifecycle between local development, Amazon ECR, and EC2, forming the foundation for automated CI/CD in later phases.
 
 ---
 
 ## Phase Breakdown
 - Phase 0: Project Planning & Repository Setup ✅
 - Phase 1: Application Development & Dockerization ✅
-- Phase 2: Container Registry (Amazon ECR)
+- Phase 2: EC2 & Amazon ECR Setup ✅
 - Phase 3: Build Automation (AWS CodeBuild)
 - Phase 4: Deployment Automation (AWS CodeDeploy)
 - Phase 5: End-to-End CI/CD Pipeline (AWS CodePipeline)
@@ -51,6 +50,6 @@ This phase establishes a stable, reproducible artifact that will later be integr
 ---
 
 ## Status
-Phase 1 completed.  
-The application is successfully containerized, validated locally, and ready to be integrated with AWS CI/CD services in the next phase.
+Phase 2 completed.
+The container registry and compute layer are fully prepared and validated, enabling the introduction of AWS CI/CD services in the next phase.
 
