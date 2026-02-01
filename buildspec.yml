@@ -2,6 +2,7 @@ version: 0.2
 
 env:
   variables:
+    AWS_ACCOUNT_ID: "020423264252"
     IMAGE_REPO_NAME: aws-cicd-webapp
     IMAGE_TAG: latest
 
