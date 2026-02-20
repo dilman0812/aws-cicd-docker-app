@@ -8,12 +8,13 @@ Design and implement an end-to-end AWS CI/CD pipeline that automatically builds,
 ## Overview
 This project demonstrates the incremental design and implementation of a production-ready CI/CD pipeline on AWS for a containerized web application.
 
-The emphasis is on **DevOps fundamentals, automation discipline, and reproducibility**, following a phase-by-phase approach similar to real-world engineering workflows rather than one-click deployments.
+The emphasis is on **DevOps fundamentals, automation discipline, reproducibility, and cost-aware operations**, following a structured phase-by-phase approach similar to real-world engineering workflows.
 
 ---
 
 ## CI/CD Flow
-GitHub → CodePipeline → CodeBuild → Amazon ECR → CodeDeploy → EC2
+GitHub → CodeBuild → Amazon ECR → CodeDeploy → EC2  
+(CodePipeline orchestration introduced in Phase 5)
 
 ---
 
@@ -22,30 +23,42 @@ GitHub → CodePipeline → CodeBuild → Amazon ECR → CodeDeploy → EC2
 ### Phase 1 — Dockerized Application (Local)
 ![Phase 1 Architecture](architecture/phase-1-dockerized-app.png)
 
-In this phase, a minimal web application is developed and packaged into a Docker container.  
-The application is built and validated locally to ensure consistent runtime behavior before introducing any AWS CI/CD services.
+A minimal web application is developed and packaged into a Docker container.  
+The application is built and validated locally to ensure consistent runtime behavior before introducing AWS services.
 
 ---
 
 ### Phase 2 — EC2 & Amazon ECR Integration
 ![Phase 2 Architecture](architecture/phase-2-ecr.png)
 
-In this phase, AWS infrastructure required for container distribution is introduced.  
-A Free Tier Amazon EC2 instance is provisioned and integrated with a private Amazon ECR repository using an IAM role.
+AWS infrastructure required for container distribution is introduced.  
+An EC2 instance is integrated with a private Amazon ECR repository using an IAM role.
 
-The Docker image built in Phase 1 is manually pushed from the local environment to ECR and then securely pulled onto the EC2 instance using IAM-based authentication, without relying on long-lived access keys.
-
-This phase validates the complete container image lifecycle between local development, Amazon ECR, and EC2, forming the foundation for automated CI/CD in later phases.
+The Docker image is manually pushed and pulled to validate secure container lifecycle management.
 
 ---
 
 ### Phase 3 — Build Automation with AWS CodeBuild
 ![Phase 3 Architecture](architecture/phase-3-codebuild.png)
 
-In this phase, build automation is introduced using AWS CodeBuild.  
-The source code is pulled directly from GitHub, the Docker image is built inside AWS using a declarative `buildspec.yml`, and the resulting image is automatically pushed to Amazon ECR.
+Build automation is introduced using AWS CodeBuild.  
+Source code is pulled from GitHub, the Docker image is built inside AWS using `buildspec.yml`, and the image is automatically pushed to Amazon ECR.
 
-This phase establishes a true Continuous Integration (CI) foundation by eliminating local build dependency while intentionally excluding deployment and pipeline orchestration.
+This establishes a true Continuous Integration (CI) foundation.
+
+---
+
+### Phase 4 — Deployment Automation with AWS CodeDeploy
+![Phase 4 Architecture](architecture/phase-4-codedeploy.png)
+
+Deployment automation is introduced using AWS CodeDeploy.  
+A deployment bundle stored in Amazon S3 triggers lifecycle hooks on EC2 to:
+
+- Stop existing Docker containers  
+- Pull the latest image from Amazon ECR  
+- Start a new container instance  
+
+This eliminates manual SSH-based deployments and completes Continuous Deployment (CD) automation.
 
 ---
 
@@ -54,12 +67,17 @@ This phase establishes a true Continuous Integration (CI) foundation by eliminat
 - Phase 1: Application Development & Dockerization ✅
 - Phase 2: EC2 & Amazon ECR Setup ✅
 - Phase 3: Build Automation (AWS CodeBuild) ✅
-- Phase 4: Deployment Automation (AWS CodeDeploy)
-- Phase 5: End-to-End CI/CD Pipeline (AWS CodePipeline)
+- Phase 4: Deployment Automation (AWS CodeDeploy) ✅
+- Phase 5: End-to-End CI/CD Orchestration (AWS CodePipeline)
 
 ---
 
-## Status
-Phase 3 completed.  
-Docker image builds are fully automated within AWS and published to Amazon ECR, preparing the project for deployment automation in the next phase.
+## Current Status
+Phases 1–4 completed.
 
+- Docker builds are automated using AWS CodeBuild  
+- Container images are stored in Amazon ECR  
+- Deployments to EC2 are automated using AWS CodeDeploy  
+- EC2 instances are stopped between validations to maintain cost efficiency  
+
+The final phase introduces AWS CodePipeline to orchestrate the entire workflow end-to-end.
